@@ -8,6 +8,6 @@ Depends: R (>= 3.1.0)
 License: Artistic-2.0
 LazyData: true
 BiocViews: miRNA, miRNAData
-Imports: 
+Imports: GenomicRanges
 Suggests: knitr, testthat
 VignetteBuilder: knitr
