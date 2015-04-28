@@ -1,0 +1,13 @@
+Package: mm10.mirna.annotations
+Title: A collection of miRNA annotations
+Version: 0.1
+Authors@R: person("Charles", "Joly Beauparlant", role=c("aut", "cre"),
+    email="Charles.Joly-Beauparlant@crchul.ulaval.ca")
+Description: This package contains various miRNA annotations in GRanges format.
+Depends: R (>= 3.1.0)
+License: Artistic-2.0
+LazyData: true
+BiocViews: miRNA, miRNAData
+Imports: 
+Suggests: knitr, testthat
+VignetteBuilder: knitr
