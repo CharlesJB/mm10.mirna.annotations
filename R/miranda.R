@@ -50,7 +50,7 @@ miranda <- function(filename = NULL) {
 
   # Extract data.frame
   coord <- gsub("\\[|\\]", "", miranda[["genome_coordinates"]])
-  coord <- data.frame(do.call("rbind", lapply(strsplit(miranda, "[:-]"),
+  coord <- data.frame(do.call("rbind", lapply(strsplit(coord, "[:-]"),
                                 function(x) x[c(2:4)])))
   colnames(coord) <- c("seqnames", "start", "end")
   i <- colnames(miranda) %in% c("mirna_name", "gene_symbol")
@@ -67,11 +67,11 @@ miranda <- function(filename = NULL) {
   miranda[["start"]][i] <- miranda[["end"]][i]
   miranda[["end"]][i] <- tmp[i]
   rm(tmp)
-  i <- !grepl("random", mir[["seqnames"]])
-  mir <- mir[i,]
+  i <- !grepl("random", miranda[["seqnames"]])
+  miranda <- miranda[i,]
 
   # Create GRanges object
-  gr <- makeGRangesFromDataFrame(miranda, seqinfo = Seqinfo("mm10"),
-                                 keep.extra.columns = TRUE)
-  keepStandardChromosomes(gr)
+  gr <- GenomicRanges::makeGRangesFromDataFrame(miranda,
+          seqinfo = GenomeInfoDb::Seqinfo(genome = "mm10"), keep.extra.columns = TRUE)
+  GenomeInfoDb::keepStandardChromosomes(gr)
 }
