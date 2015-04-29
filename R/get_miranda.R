@@ -74,10 +74,8 @@ get_miranda <- function(filename = NULL) {
   miranda[["start"]][i] <- miranda[["end"]][i]
   miranda[["end"]][i] <- tmp[i]
   rm(tmp)
-#  i <- !grepl("random", miranda[["seqnames"]])
-#  miranda <- miranda[i,]
 
- a# Create GRanges object
+ # Create GRanges object
   miranda <- GenomicRanges::makeGRangesFromDataFrame(miranda,
           seqinfo = GenomeInfoDb::Seqinfo(genome = "mm9"),
           keep.extra.columns = TRUE)
