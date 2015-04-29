@@ -23,7 +23,7 @@
 #'
 #' @import GenomicRanges
 #' @export
-miranda <- function(filename = NULL) {
+get_miranda <- function(filename = NULL) {
   # Check argument
   if (!is.null(filename)) {
     msg <- "Error in miranda("
@@ -57,21 +57,32 @@ miranda <- function(filename = NULL) {
   miranda <- cbind(coord, miranda[,i])
 
   # Clean data.frame
-  miranda[["start"]] <- as.numeric(miranda[["start"]])
-  miranda[["end"]] <- as.numeric(miranda[["end"]])
+  miranda[["start"]] <- suppressWarnings(
+                          as.numeric(as.character(miranda[["start"]])))
+  miranda[["end"]] <- suppressWarnings(
+                       as.numeric(as.character(miranda[["end"]])))
   miranda[["seqnames"]] <- as.character(miranda[["seqnames"]])
   miranda[["seqnames"]] <- paste0("chr", miranda[["seqnames"]])
+
+  ## We need to remove some strange genome_coordinates that caused NA, i.e.:
+  ## [mm9:9:119034019-119034036,119036106-119036109:+]
+  i <- !is.na(miranda[["start"]]) & !is.na(miranda[["end"]])
+  miranda <- miranda[i,]
 
   tmp <- miranda[["start"]]
   i <- miranda[["start"]] > miranda[["end"]]
   miranda[["start"]][i] <- miranda[["end"]][i]
   miranda[["end"]][i] <- tmp[i]
   rm(tmp)
-  i <- !grepl("random", miranda[["seqnames"]])
-  miranda <- miranda[i,]
+#  i <- !grepl("random", miranda[["seqnames"]])
+#  miranda <- miranda[i,]
 
-  # Create GRanges object
-  gr <- GenomicRanges::makeGRangesFromDataFrame(miranda,
-          seqinfo = GenomeInfoDb::Seqinfo(genome = "mm10"), keep.extra.columns = TRUE)
-  GenomeInfoDb::keepStandardChromosomes(gr)
+ a# Create GRanges object
+  miranda <- GenomicRanges::makeGRangesFromDataFrame(miranda,
+          seqinfo = GenomeInfoDb::Seqinfo(genome = "mm9"),
+          keep.extra.columns = TRUE)
+  miranda <- GenomeInfoDb::keepStandardChromosomes(miranda)
+
+  # liftOver
+  liftOver_mm9ToMm10(miranda)
 }
